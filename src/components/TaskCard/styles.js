@@ -6,16 +6,25 @@ export const Container = styled.div`
     height: 200px;
     box-shadow: -3px 1px 13px -2px rgba(0,0,0,0.73);
     border-radius: 10px;
-    flex-direction: column;
+    
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover{
+        opacity: 0.5;
+    }
 `;
 
 export const TopCard = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 `;
 
 export const BottomCard = styled.div`
