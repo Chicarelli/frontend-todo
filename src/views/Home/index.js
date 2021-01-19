@@ -54,7 +54,7 @@ function Home() {
       <S.Content>
       {
         tasks.map(task => (
-          <TaskCard/>
+          <TaskCard type={task.type} title={task.title} when={task.when}/>
         ))
         
       }

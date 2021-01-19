@@ -14,7 +14,6 @@ export const FilterArea = styled.div `
         background: none;
         border: none;
     }
-
 `
 
 export const Content = styled.div `
@@ -23,6 +22,7 @@ export const Content = styled.div `
     flex-wrap: wrap;
     margin: auto;
     justify-content: space-between;
+    margin-bottom: 150px;
     
 `;
 
