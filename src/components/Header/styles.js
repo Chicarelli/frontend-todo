@@ -46,6 +46,10 @@ export const RightSide = styled.div`
     }
 
     #notification{
+        background: none;
+        border: none;
+        cursor: pointer;
+        
         img{
             width: 23px;
             height: 30px;
