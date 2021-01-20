@@ -8,13 +8,13 @@ import {Redirect} from 'react-router-dom';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import typeIcons from '../../utils/type-icons';
+import isConnected from '../../utils/isConnected';
 
 import iconCalendar from  '../../assets/calendar.png';
 import iconClock from  '../../assets/clock.png';
 
 function Task({match}) {
     const [redirect, setRedirect] = useState(false);
-    const [lateCount, setLateCount] = useState()
     const [type, setType] = useState();
     const [id, setId] = useState();
     const [done, setDone] = useState(false);
@@ -24,12 +24,6 @@ function Task({match}) {
     const [hour, setHour] = useState('');
     const[macaddress, setMacaddress] = useState('11:11:11:11:11:11');
 
- async function lateVerify(){
-   await api.get(`/task/filter/late/11:11:11:11:11:11`)
-   .then(response => {
-     setLateCount(response.data.length);
-   })
- }
 
  async function loadTaskDetails(){
     await api.get(`/task/${match.params.id}`)
@@ -43,6 +37,20 @@ function Task({match}) {
     })
  }
 
+ async function excluir(){
+    if(match.params.id){
+        const res = window.confirm('Deseja excluir a tarefa?')
+        if(res == true){
+            await api.delete(`/task/${match.params.id}`)
+            .then(() => {
+                setRedirect(true);
+            })
+        }
+    } else {
+        setRedirect(true);
+    }
+ }
+
  async function save(){
     //Validação
     if(!title)
@@ -53,7 +61,7 @@ function Task({match}) {
         return alert("Você precisa informar o tipo da tarefa");
     else if(!date)
         return alert("Você precisa definir a data da tarefa");
-    else if (!date)
+    else if (!hour)
         return alert("Você precisa definir a hora da tarefa");
 
      if(match.params.id){
@@ -80,14 +88,15 @@ function Task({match}) {
  }
 
  useEffect(() => {
-  lateVerify();
+     if(!isConnected) 
+        setRedirect(true);
   loadTaskDetails();
 }, [])
 
   return (
     <S.Container>
         {redirect && <Redirect to="/" />}
-      <Header lateCount={lateCount}/>
+      <Header/>
 
         <S.Form>
             <S.TypeIcons>
@@ -130,7 +139,7 @@ function Task({match}) {
                     <span>CONCLUÍDO</span>
                 </div>
 
-                <button type="button">EXCLUIR</button>
+                <button type="button" onClick={excluir}>EXCLUIR</button>
 
             </S.Options>
 
