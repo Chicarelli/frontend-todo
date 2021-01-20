@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
 
 import * as S from './styles';
-
+import {format} from 'date-fns';
 import api from "../../services/api";
+import {Redirect} from 'react-router-dom';
 //componentes
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -11,7 +12,8 @@ import typeIcons from '../../utils/type-icons';
 import iconCalendar from  '../../assets/calendar.png';
 import iconClock from  '../../assets/clock.png';
 
-function Task() {
+function Task({match}) {
+    const [redirect, setRedirect] = useState(false);
     const [lateCount, setLateCount] = useState()
     const [type, setType] = useState();
     const [id, setId] = useState();
@@ -29,23 +31,62 @@ function Task() {
    })
  }
 
+ async function loadTaskDetails(){
+    await api.get(`/task/${match.params.id}`)
+    .then(response => {
+        setType(response.data.type)
+        setTitle(response.data.title)
+        setDone(response.data.done)
+        setDescription(response.data.description)
+        setDate(format(new Date(response.data.when), 'yyyy-MM-dd'))
+        setHour(format(new Date(response.data.when), 'HH:mm'))
+    })
+ }
+
  async function save(){
-     await api.post('/task', {
-         macaddress,
-         type,
-         title,
-         description,
-         when: `${date}T${hour}:00.000`
-     })
-     .then(() => alert('Tarefa criada!'))
+    //Validação
+    if(!title)
+        return alert("Você precisa informar o título da tarefa");
+    else if(!description)
+        return alert("Você precisa informar a descrição da tarefa");
+    else if (!type)
+        return alert("Você precisa informar o tipo da tarefa");
+    else if(!date)
+        return alert("Você precisa definir a data da tarefa");
+    else if (!date)
+        return alert("Você precisa definir a hora da tarefa");
+
+     if(match.params.id){
+        await api.put(`/task/${match.params.id}`, {
+            macaddress,
+            done,
+            type,
+            title,
+            description,
+            when: `${date}T${hour}:00.000`
+        })
+        .then(() => setRedirect(true))
+     }else {
+        await api.post('/task', {
+            macaddress,
+            done, 
+            type,
+            title,
+            description,
+            when: `${date}T${hour}:00.000`
+        })
+        .then(() => setRedirect(true))
+    }
  }
 
  useEffect(() => {
   lateVerify();
+  loadTaskDetails();
 }, [])
 
   return (
     <S.Container>
+        {redirect && <Redirect to="/" />}
       <Header lateCount={lateCount}/>
 
         <S.Form>

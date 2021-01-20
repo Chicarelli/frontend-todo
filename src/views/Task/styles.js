@@ -122,8 +122,10 @@ export const Options = styled.div`
 export const Save = styled.div`
     width: 100%;
     margin-top: 20px;
+    margin-bottom: 70px;
     
     button{
+        
         width: 100%;
         margin: auto;
         background: #ee6b26;

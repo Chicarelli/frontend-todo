@@ -23,6 +23,11 @@ export const Content = styled.div `
     margin: auto;
     justify-content: space-between;
     margin-bottom: 150px;
+
+    a{
+        text-decoration: none;
+        color: #000;
+    }
     
 `;
 
